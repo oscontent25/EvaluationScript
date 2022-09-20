@@ -19,6 +19,8 @@ function judge(outputFile) {
             }
         }
     })
+
+    console.log(outputFile);
     return points;
 }
 
