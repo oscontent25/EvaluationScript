@@ -2,6 +2,8 @@ let points = {
     'busybox echo "#### independent command test"': [0, 1],
     'busybox ash -c exit': [0, 1],
     'busybox sh -c exit': [0, 1],
+    'busybox basename /aaa/bbb': [0, 1],
+    'busybox cal': [0, 1],
     'busybox clear': [0, 1],
     'busybox date': [0, 1],
     'busybox df': [0, 1],
