@@ -370,3 +370,4 @@ function judge(outputFile) {
 }
 
 
+module.exports.judge = judge;

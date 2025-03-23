@@ -370,4 +370,4 @@ function judge(outputFile) {
     return points;
 }
 
-
+module.exports.judge = judge;
