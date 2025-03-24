@@ -349,8 +349,10 @@ function judge(outputFile) {
             continue;
         }
         const testOutput = outputFile.substring(start + startMatch[0].length, end)
-            .split('\n')
-            .filter(line => line);
+        .split('\n')
+        .filter(line => line)
+        .map(line => line.startsWith(',') ? line.substring(1) : line);
+    
         switch (testName) {
             case 'test_brk': evaluateTestBrk(testOutput); break;
             case 'test_chdir': evaluateTestChdir(testOutput); break;
