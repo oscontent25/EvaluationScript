@@ -320,7 +320,12 @@ function judge(outputFile) {
         const testName = startMatch[1];
         const start = outputFile.indexOf(startMatch[0]);
         const end = outputFile.indexOf(`========== END ${testName}`, start);
-        if (end === -1) break;
+        if (end === -1) {
+            end = outputFile.indexOf(`========== start`, start)
+            if (end === -1){
+                break;
+            }
+        }
         // if (!targetTestcases.includes(testName)) {
         //     outputFile = outputFile.substring(end);
         //     continue;
