@@ -391,12 +391,13 @@ function judge(outputFile) {
             case 'test_yield': evaluateTestYield(testOutput); break;
             default: break;
         }
-        if(points[testName][0] === points[testName][1]) {
-            points[testName][0] = 1;
+        let testName1 = 'glibc ' + testName;
+        if(points[testName1][0] === points[testName1][1]) {
+            points[testName1][0] = 1;
         }else{
-            points[testName][0] = 0;
+            points[testName1][0] = 0;
         }
-        points[testName][1] = 1;
+        points[testName1][1] = 1;
         outputFile = outputFile.substring(end);
     }
 
