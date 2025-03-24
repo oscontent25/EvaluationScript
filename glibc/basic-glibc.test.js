@@ -51,14 +51,14 @@ let points = {
 //     console.log("Judge function result:", result);  // 输出 judge 函数的返回值
 // });
 // // Base assertion utility function
-// function assertUtil(testFn, data, args, expectedPass, testName, pointsKey) {
-//     const result = testFn(data, ...args);
-//     // console.log(`Assertion passed for ${testName}, result: ${data}, ${args}`);
-//     if (result === expectedPass) {
-//         pointsKey = 'glibc ' + pointsKey;
-//         points[pointsKey][0] += 1; // Increment pass count if assertion passes
-//     }
-// }
+function assertUtil(testFn, data, args, expectedPass, testName, pointsKey) {
+    const result = testFn(data, ...args);
+    // console.log(`Assertion passed for ${testName}, result: ${data}, ${args}`);
+    if (result === expectedPass) {
+        pointsKey = 'glibc ' + pointsKey;
+        points[pointsKey][0] += 1; // Increment pass count if assertion passes
+    }
+}
 
 // Specific assertion functions
 function assertGe(data, minLength, testName) {
