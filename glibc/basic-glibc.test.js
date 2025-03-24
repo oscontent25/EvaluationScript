@@ -33,32 +33,32 @@ let points = {
     'glibc test_write': [0, 2],
     'glibc test_yield': [0, 4]
 };
-const { assert } = require('console');
-const fs = require('fs');  // 引入 fs 模块
+// const { assert } = require('console');
+// const fs = require('fs');  // 引入 fs 模块
 
-// 读取命令行传入的文件路径（在命令行中传入文件路径）
-const filePath = process.argv[2];  // 通过 process.argv 获取传入的文件路径
+// // 读取命令行传入的文件路径（在命令行中传入文件路径）
+// const filePath = process.argv[2];  // 通过 process.argv 获取传入的文件路径
 
-// 读取文件内容
-fs.readFile(filePath, 'utf8', (err, data) => {
-    if (err) {
-        console.error("读取文件时发生错误:", err);
-        return;
-    }
+// // 读取文件内容
+// fs.readFile(filePath, 'utf8', (err, data) => {
+//     if (err) {
+//         console.error("读取文件时发生错误:", err);
+//         return;
+//     }
 
-    // 将文件内容传递给 judge 函数
-    let result = judge(data);
-    console.log("Judge function result:", result);  // 输出 judge 函数的返回值
-});
-// Base assertion utility function
-function assertUtil(testFn, data, args, expectedPass, testName, pointsKey) {
-    const result = testFn(data, ...args);
-    // console.log(`Assertion passed for ${testName}, result: ${data}, ${args}`);
-    if (result === expectedPass) {
-        pointsKey = 'glibc ' + pointsKey;
-        points[pointsKey][0] += 1; // Increment pass count if assertion passes
-    }
-}
+//     // 将文件内容传递给 judge 函数
+//     let result = judge(data);
+//     console.log("Judge function result:", result);  // 输出 judge 函数的返回值
+// });
+// // Base assertion utility function
+// function assertUtil(testFn, data, args, expectedPass, testName, pointsKey) {
+//     const result = testFn(data, ...args);
+//     // console.log(`Assertion passed for ${testName}, result: ${data}, ${args}`);
+//     if (result === expectedPass) {
+//         pointsKey = 'glibc ' + pointsKey;
+//         points[pointsKey][0] += 1; // Increment pass count if assertion passes
+//     }
+// }
 
 // Specific assertion functions
 function assertGe(data, minLength, testName) {
