@@ -53,7 +53,7 @@ let points = {
 // Base assertion utility function
 function assertUtil(testFn, data, args, expectedPass, testName, pointsKey) {
     const result = testFn(data, ...args);
-    console.log(`Assertion passed for ${testName}, result: ${data}, ${args}`);
+    // console.log(`Assertion passed for ${testName}, result: ${data}, ${args}`);
     if (result === expectedPass) {
         pointsKey = 'glibc ' + pointsKey;
         points[pointsKey][0] += 1; // Increment pass count if assertion passes
@@ -108,7 +108,7 @@ function evaluateTestChdir(data) {
     assertGe(data, 2, 'test_chdir');
     const p1 = /chdir ret: (\d+)/;
     const r1 = data[0]?.match(p1)?.[1];
-    console.log(r1);
+    // console.log(r1);
     if (r1) assertEqual(data, r1, "0", 'test_chdir');
     assertIn("test_chdir", data[1], 'test_chdir');
    
@@ -352,7 +352,7 @@ function judge(outputFile) {
         .split('\n')
         .filter(line => line)
         .map(line => line.startsWith(',') ? line.substring(1) : line);
-    
+        console.log(testOutput);
         switch (testName) {
             case 'test_brk': evaluateTestBrk(testOutput); break;
             case 'test_chdir': evaluateTestChdir(testOutput); break;
