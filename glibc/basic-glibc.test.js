@@ -37,9 +37,7 @@ let points = {
 // Base assertion utility function
 function assertUtil(testFn, data, args, expectedPass, testName, pointsKey) {
     const result = testFn(data, ...args);
-    console.log(`Assertion passed for ${testName}, result: ${data}, ${args}`);
     if (result === expectedPass) {
-        console.log(`Assertion passed for ${testName}`);
         pointsKey = 'glibc ' + pointsKey;
         points[pointsKey][0] += 1; // Increment pass count if assertion passes
     }
@@ -320,6 +318,8 @@ function judge(outputFile) {
     let end = outputFile.indexOf('END basic-glibc', start);
     if(end == -1) return points;
     outputFile = outputFile.substring(start + 'START basic-glibc'.length, end);
+    console.log("------------------start-----------------------------");
+    console.log(outputFile);
     while (true) {
         const startMatch = outputFile.match(pat);
         if (!startMatch) break;
