@@ -33,13 +33,28 @@ let points = {
     'musl test_write': [0, 2],
     'musl test_yield': [0, 4]
 };
+// const { assert } = require('console');
+// const fs = require('fs');  // 引入 fs 模块
 
-// Base assertion utility function
+// // 读取命令行传入的文件路径（在命令行中传入文件路径）
+// const filePath = process.argv[2];  // 通过 process.argv 获取传入的文件路径
+
+// // 读取文件内容
+// fs.readFile(filePath, 'utf8', (err, data) => {
+//     if (err) {
+//         console.error("读取文件时发生错误:", err);
+//         return;
+//     }
+
+//     // 将文件内容传递给 judge 函数
+//     let result = judge(data);
+//     console.log("Judge function result:", result);  // 输出 judge 函数的返回值
+// });
+// // Base assertion utility function
 function assertUtil(testFn, data, args, expectedPass, testName, pointsKey) {
     const result = testFn(data, ...args);
-    console.log(`Assertion passed for ${testName}, result: ${data}, ${args}`);
+    // console.log(`Assertion passed for ${testName}, result: ${data}, ${args}`);
     if (result === expectedPass) {
-        console.log(`Assertion passed for ${testName}`);
         pointsKey = 'musl ' + pointsKey;
         points[pointsKey][0] += 1; // Increment pass count if assertion passes
     }
@@ -93,6 +108,7 @@ function evaluateTestChdir(data) {
     assertGe(data, 2, 'test_chdir');
     const p1 = /chdir ret: (\d+)/;
     const r1 = data[0]?.match(p1)?.[1];
+    // console.log(r1);
     if (r1) assertEqual(data, r1, "0", 'test_chdir');
     assertIn("test_chdir", data[1], 'test_chdir');
    
@@ -332,9 +348,13 @@ function judge(outputFile) {
         if (end === -1) {
             continue;
         }
-        const testOutput = outputFile.substring(start + startMatch[0].length, end)
-            .split('\n')
-            .filter(line => line);
+        let testOutputstr = outputFile.substring(start + startMatch[0].length, end).replace(/\r/g, '');
+        console.log(testOutputstr);
+        const testOutput = testOutputstr
+        .split('\n')
+        .filter(line => line)
+        .map(line => line.startsWith(',') ? line.substring(1) : line);
+        console.log(testOutput);
         switch (testName) {
             case 'test_brk': evaluateTestBrk(testOutput); break;
             case 'test_chdir': evaluateTestChdir(testOutput); break;
