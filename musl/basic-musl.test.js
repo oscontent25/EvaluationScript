@@ -390,6 +390,12 @@ function judge(outputFile) {
             case 'test_yield': evaluateTestYield(testOutput); break;
             default: break;
         }
+        if(points[testName][0] === points[testName][1]) {
+            points[testName][0] = 1;
+        }else{
+            points[testName][0] = 0;
+        }
+        points[testName][1] = 1;
         outputFile = outputFile.substring(end);
     }
     return points;

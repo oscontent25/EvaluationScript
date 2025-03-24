@@ -102,6 +102,7 @@ function evaluateTestBrk(data) {
         assertEqual(data, a2, a1 + 64, 'test_brk');
         assertEqual(data, a3, a2 + 64, 'test_brk');
     }
+
 }
 
 function evaluateTestChdir(data) {
@@ -390,8 +391,15 @@ function judge(outputFile) {
             case 'test_yield': evaluateTestYield(testOutput); break;
             default: break;
         }
+        if(points[testName][0] === points[testName][1]) {
+            points[testName][0] = 1;
+        }else{
+            points[testName][0] = 0;
+        }
+        points[testName][1] = 1;
         outputFile = outputFile.substring(end);
     }
+
     return points;
 }
 
