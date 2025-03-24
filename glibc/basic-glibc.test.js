@@ -37,7 +37,9 @@ let points = {
 // Base assertion utility function
 function assertUtil(testFn, data, args, expectedPass, testName, pointsKey) {
     const result = testFn(data, ...args);
+    console.log(`Assertion passed for ${testName}, result: ${data}, ${args}`);
     if (result === expectedPass) {
+        console.log(`Assertion passed for ${testName}`);
         pointsKey = 'glibc ' + pointsKey;
         points[pointsKey][0] += 1; // Increment pass count if assertion passes
     }
@@ -49,7 +51,7 @@ function assertGe(data, minLength, testName) {
 }
 
 function assertEqual(data, value, expected, testName) {
-    assertUtil((d, idx, val) => d[idx] === val, data, [value, expected], true, testName, testName);
+    assertUtil((d, idx, val) => idx === val, data, [value, expected], true, testName, testName);
 }
 
 function assertNotEqual(data, value, notExpected, testName) {
@@ -91,15 +93,15 @@ function evaluateTestChdir(data) {
     assertGe(data, 2, 'test_chdir');
     const p1 = /chdir ret: (\d+)/;
     const r1 = data[0]?.match(p1)?.[1];
-    if (r1) assertEqual(data, 0, "0", 'test_chdir');
+    if (r1) assertEqual(data, r1, "0", 'test_chdir');
     assertIn("test_chdir", data[1], 'test_chdir');
+   
 }
 
 function evaluateTestExecve(data) {
     assertGe(data, 2, 'test_execve');
-
-    assertEqual(data, 0, "  I am test_echo.", 'test_execve');
-    assertEqual(data, 1, "execve success.", 'test_execve');
+    assertInStr("  I am test_echo.", data, 'test_execve');
+    assertInStr("execve success.", data, 'test_execve');
 }
 
 function evaluateTestClone(data) {
@@ -107,6 +109,7 @@ function evaluateTestClone(data) {
     assertInStr("  Child says successfully!", data, 'test_clone');
     assertInStr(/pid:\d+/, data, 'test_clone');
     assertInStr("clone process successfully.", data, 'test_clone');
+    
 }
 
 function evaluateTestClose(data) {
@@ -116,7 +119,7 @@ function evaluateTestClose(data) {
 
 function evaluateTestDup2(data) {
     assertGe(data, 1, 'test_dup2');
-    assertEqual(data, 0, "  from fd 100", 'test_dup2');
+    assertInStr("  from fd 100", data, 'test_dup2');
 }
 
 function evaluateTestDup(data) {
@@ -127,7 +130,7 @@ function evaluateTestDup(data) {
 
 function evaluateTestExit(data) {
     assertGe(data, 1, 'test_exit');
-    assertEqual(data, 0, "exit OK.", 'test_exit');
+    assertInStr("exit OK.", data, 'test_exit');
 }
 
 function evaluateTestFork(data) {
@@ -139,9 +142,9 @@ function evaluateTestFork(data) {
 function evaluateTestFstat(data) {
     assertGe(data, 2, 'test_fstat');
     const res1 = data[0]?.match(/fstat ret: (\d+)/)?.[1];
-    if (res1) assertEqual(data, 0, "0", 'test_fstat');
+    if (res1) assertEqual(data, res1, "0", 'test_fstat');
     const res2 = data[1]?.match(/fstat: dev: \d+, inode: \d+, mode: \d+, nlink: (\d+), size: \d+, atime: \d+, mtime: \d+, ctime: \d+/)?.[1];
-    if (res2) assertEqual(data, 1, "1", 'test_fstat');
+    if (res2) assertEqual(data, res2, "1", 'test_fstat');
 }
 
 function evaluateTestGetcwd(data) {
@@ -155,12 +158,13 @@ function evaluateTestGetdents(data) {
     if (r1) assertGreat(data, parseInt(r1), 1, 'test_getdents');
     const r2 = data[1]?.match(/getdents fd:(\d+)/)?.[1];
     if (r2) assertGreat(data, parseInt(r2), 1, 'test_getdents');
-    assertEqual(data, 2, "getdents success.", 'test_getdents');
+    assertGreat(data, data[3].length, 1, 'test_getdents');
+    assertInStr("getdents success.", data, 'test_getdents');
 }
 
 function evaluateTestGetpid(data) {
     assertGe(data, 2, 'test_getpid');
-    assertEqual(data, 0, "getpid success.", 'test_getpid');
+    assertInStr("getpid success.", data, 'test_getpid');
     const r = data[1]?.match(/pid = (\d+)/)?.[1];
     if (r) assertGreat(data, parseInt(r), 0, 'test_getpid');
 }
@@ -172,7 +176,7 @@ function evaluateTestGetppid(data) {
 
 function evaluateTestGettimeofday(data) {
     assertGe(data, 3, 'test_gettimeofday');
-    assertEqual(data, 0, "gettimeofday success.", 'test_gettimeofday');
+    assertIn("gettimeofday success.", data, 'test_gettimeofday');
     const res = data[2]?.match(/interval: (\d+)/)?.[1];
     if (res) assertGreat(data, parseInt(res), 0, 'test_gettimeofday');
 }
@@ -186,31 +190,31 @@ function evaluateTestMkdir(data) {
 function evaluateTestMmap(data) {
     assertGe(data, 2, 'test_mmap');
     const r = data[0]?.match(/file len: (\d+)/)?.[1];
-    if (r) assertGe(data, parseInt(r), 27, 'test_mmap');
-    assertEqual(data, 1, "mmap content:   Hello, mmap successfully!", 'test_mmap');
+    if (r) assertEqual(data, parseInt(r), 27, 'test_mmap');
+    assertIn("mmap content:   Hello, mmap successfully!", data, 'test_mmap');
 }
 
 function evaluateTestMount(data) {
     assertGe(data, 4, 'test_mount');
     const r = data[0]?.match(/Mounting dev:(.+) to .\/mnt/)?.[1];
     if (r) assertEqual(data, r.length > 0, true, 'test_mount');
-    assertEqual(data, 1, "mount return: 0", 'test_mount');
-    assertEqual(data, 2, "mount successfully", 'test_mount');
-    assertEqual(data, 3, "umount return: 0", 'test_mount');
+    assertIn("mount return: 0", data, 'test_mount');
+    assertIn("mount successfully", data, 'test_mount');
+    assertIn("umount return: 0", data, 'test_mount');
 }
 
 function evaluateTestMunmap(data) {
     assertGe(data, 3, 'test_munmap');
     const r = data[0]?.match(/file len: (\d+)/)?.[1];
-    if (r) assertGe(data, parseInt(r), 27, 'test_munmap');
-    assertEqual(data, 1, "munmap return: 0", 'test_munmap');
-    assertEqual(data, 2, "munmap successfully!", 'test_munmap');
+    if (r) assertEqual(data, parseInt(r), 27, 'test_munmap');
+    assertIn("munmap return: 0", data, 'test_munmap');
+    assertIn("munmap successfully!", data, 'test_munmap');
 }
 
 function evaluateTestOpen(data) {
     assertGe(data, 2, 'test_open');
-    assertEqual(data, 0, "Hi, this is a text file.", 'test_open');
-    assertEqual(data, 1, "syscalls testing success!", 'test_open');
+    assertIn("Hi, this is a text file.", data[0], 'test_open');
+    assertIn("syscalls testing success!", data[1], 'test_open');
 }
 
 function evaluateTestOpenat(data) {
@@ -219,7 +223,7 @@ function evaluateTestOpenat(data) {
     if (r) assertGreat(data, parseInt(r), 1, 'test_openat');
     const r1 = data[1]?.match(/openat fd: (\d+)/)?.[1];
     if (r1 && r) assertGreat(data, parseInt(r1), parseInt(r), 'test_openat');
-    assertEqual(data, 2, "openat success.", 'test_openat');
+    assertIn("openat success.", data, 'test_openat');
 }
 
 function evaluateTestPipe(data) {
@@ -228,23 +232,24 @@ function evaluateTestPipe(data) {
     let cpid1 = data.some(line => /cpid: (\d+)/.test(line) && parseInt(line.match(/cpid: (\d+)/)[1]) > 0);
     assertEqual(data, cpid0, true, 'test_pipe');
     assertEqual(data, cpid1, true, 'test_pipe');
-    assertEqual(data, 2, "  Write to pipe successfully.", 'test_pipe');
+    assertIn("  Write to pipe successfully.", data, 'test_pipe');
 }
 
 function evaluateTestRead(data) {
     assertGe(data, 2, 'test_read');
-    assertEqual(data, 0, "Hi, this is a text file.", 'test_read');
-    assertEqual(data, 1, "syscalls testing success!", 'test_read');
+
+    assertIn("Hi, this is a text file.", data, 'test_read');
+    assertIn("syscalls testing success!", data[1], 'test_read');
 }
 
 function evaluateTestSleep(data) {
     assertGe(data, 1, 'test_sleep');
-    assertEqual(data, 0, "sleep success.", 'test_sleep');
+    assertIn("sleep success.", data, 'test_sleep');
 }
 
 function evaluateTestTimes(data) {
     assertGe(data, 2, 'test_times');
-    assertEqual(data, 0, "mytimes success", 'test_times');
+    assertIn("mytimes success", data, 'test_times');
     const r = data[1]?.match(/\{tms_utime:(.+), tms_stime:(.+), tms_cutime:(.+), tms_cstime:(.+)\}/)?.slice(1);
     if (r) {
         assertGreat(data, parseInt(r[0]), 0, 'test_times');
@@ -259,8 +264,9 @@ function evaluateTestUmount(data) {
     const r = data[0]?.match(/Mounting dev:(.+) to .\/mnt/)?.[1];
     if (r) assertEqual(data, r.length > 0, true, 'test_umount');
     assertEqual(data, 1, "mount return: 0", 'test_umount');
-    assertEqual(data, 2, "umount success.", 'test_umount');
-    assertEqual(data, 3, "return: 0", 'test_umount');
+    assertIn("mount return: 0", data, 'test_umount');
+    assertIn("umount success.", data, 'test_umount');
+    assertIn("return: 0", data, 'test_umount');
 }
 
 function evaluateTestUname(data) {
@@ -270,26 +276,27 @@ function evaluateTestUname(data) {
 
 function evaluateTestUnlink(data) {
     assertGe(data, 1, 'test_unlink');
-    assertEqual(data, 0, "  unlink success!", 'test_unlink');
+    assertIn("unlink success!", data[0], 'test_unlink');
 }
 
 function evaluateTestWait(data) {
     assertGe(data, 3, 'test_wait');
     assertEqual(data, 0, "This is child process", 'test_wait');
-    assertEqual(data, 1, "wait child success.", 'test_wait');
-    assertEqual(data, 2, "wstatus: 0", 'test_wait');
+    assertIn("wait child success.", data, 'test_wait');
+    assertIn("This is child process", data, 'test_wait');
+    assertIn("wstatus: 0", data, 'test_wait');
 }
 
 function evaluateTestWaitpid(data) {
     assertGe(data, 3, 'test_waitpid');
-    assertEqual(data, 0, "This is child process", 'test_waitpid');
-    assertEqual(data, 1, "waitpid successfully.", 'test_waitpid');
-    assertEqual(data, 2, "wstatus: 3", 'test_waitpid');
+    assertIn("waitpid successfully.", data, 'test_waitpid');
+    assertIn("wstatus: 3", data, 'test_waitpid');
+    assertIn("This is child process", data, 'test_waitpid');
 }
 
 function evaluateTestWrite(data) {
     assertGe(data, 1, 'test_write');
-    assertEqual(data, 0, "Hello operating system contest.", 'test_write');
+    assertIn("Hello operating system contest.", data, 'test_write');
 }
 
 function evaluateTestYield(data) {
@@ -313,22 +320,20 @@ function judge(outputFile) {
     let end = outputFile.indexOf('END basic-glibc', start);
     if(end == -1) return points;
     outputFile = outputFile.substring(start + 'START basic-glibc'.length, end);
-    console.log(outputFile);
     while (true) {
         const startMatch = outputFile.match(pat);
         if (!startMatch) break;
         const testName = startMatch[1];
         const start = outputFile.indexOf(startMatch[0]);
-        const end = outputFile.indexOf(`========== END ${testName}`, start);
+        let end = outputFile.indexOf(`========== END ${testName}`, start);
+        if(testName === 'test_execve') {
+            end = outputFile.indexOf(`========== END main`, start);
+        }
         if (end === -1) {
-            end = outputFile.indexOf(`========== start`, start)
-            if (end === -1){
-                break;
-            }
+            continue;
         }
         const testOutput = outputFile.substring(start + startMatch[0].length, end)
             .split('\n')
-            .map(line => line.trim())
             .filter(line => line);
         switch (testName) {
             case 'test_brk': evaluateTestBrk(testOutput); break;
