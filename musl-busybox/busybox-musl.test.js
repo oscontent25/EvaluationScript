@@ -40,7 +40,7 @@ let points = {
     'musl busybox echo "2222222" >> test.txt': [0, 1],
     'musl busybox echo "1111111" >> test.txt': [0, 1],
     'musl busybox echo "bbbbbbb" >> test.txt': [0, 1],
-    'musl busybox sort test.txt | ./busybox uniq': [0, 1],
+    'musl busybox sort test.txt | busybox uniq': [0, 1],
     'musl busybox stat test.txt': [0, 1],
     'musl busybox strings test.txt': [0, 1],
     'musl busybox wc test.txt': [0, 1],
@@ -56,13 +56,13 @@ let points = {
     'musl busybox find -name "busybox_cmd.txt"': [0, 1],
 }
 
-function judge(outputFile) {
+function myjudge(outputFile) {
     while(true) {
         let start = outputFile.indexOf('START busybox-musl');
         if(start == -1) break;
         let end = outputFile.indexOf('END busybox-musl', start);
         if(end == -1) break;
-        let indexTestcase = outputFile.indexOf('testcase busybox');
+        let indexTestcase = outputFile.indexOf('testcase busybox', start);
         if(indexTestcase == -1 || indexTestcase > end) break;
 
         // 搜索下一个节点 如果没有下一个 则在最后推出循环
@@ -79,14 +79,56 @@ function judge(outputFile) {
             let name = judgeLine.substring('testcase'.length, successIndex).trim();
             name = 'musl ' + name;  // 在 name 前加上 'musl ' 以便区分
             if(points[name]) {
-                points[name][0] = points[name][1]
+                points[name][0] += 1;
             }
         }
 
         if(indexNextCase == -1 || indexNextCase > end) break;
         outputFile = outputFile.substring(indexNextCase);
     }
-    return points;
+    
 }
+
+function judge(outputFile){
+    let start = outputFile.indexOf('start---riscv64');
+    let end = outputFile.indexOf('end---riscv64', start);
+    if(end != -1 && start != -1){
+        let outputFile_riscv = outputFile.substring(start + 'start---riscv64'.length, end);
+        myjudge(outputFile_riscv);
+    }
+    start = outputFile.indexOf('start---x86_64');
+    end = outputFile.indexOf('end---x86_64', start);
+    if(end != -1 && start != -1){
+        let outputFile_x86 = outputFile.substring(start + 'start---x86_64'.length, end);
+        myjudge(outputFile_x86);
+    }
+    start = outputFile.indexOf('start---loongarch64');
+    end = outputFile.indexOf('end---loongarch64', start);
+    if(end != -1 && start != -1){
+        let outputFile_loongarch = outputFile.substring(start + 'start---loongarch64'.length, end);
+        myjudge(outputFile_loongarch);
+    }
+    start = outputFile.indexOf('start---aarch64');
+    end = outputFile.indexOf('end---aarch64', start);
+    if(end != -1 && start != -1){
+        let outputFile_aarch = outputFile.substring(start + 'start---aarch64'.length, end);
+        myjudge(outputFile_aarch);
+    }
+    // 遍历对象
+    for (let key in points) {
+        if (Object.hasOwnProperty.call(points, key)) {
+            let [first, second] = points[key];
+            // 检查第一个数是否是第二个数的四倍
+            if (first === second * 4) {
+                points[key][0] = 1;  
+                points[key][1] = 1;  
+            }else{
+                points[key][0] = 0;  
+                points[key][1] = 1;
+            }
+        }
+    }
+    return points;
+} 
 
 module.exports.judge = judge;

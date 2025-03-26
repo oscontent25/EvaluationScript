@@ -427,7 +427,7 @@ function parseIozone(output) {
     return ans;
 }
 
-function judge(outputFile) {
+function myjudge(outputFile) {
     let baseline = parseIozone(iozone_baseline);
     let start = outputFile.indexOf('START iozone-glibc');
     if(start == -1) return points;
@@ -452,17 +452,48 @@ function judge(outputFile) {
 				item.score = item.result / item.baseline;
 			}	
 			if (item.score >= 1) {
-				item.score = 2 - (1 / item.score);
-			} else {
-				item.score = 1.0;
+				item.score = 1;
 			}
 			let name = 'glibc ' + item.name;
-			points[name][0] = item.score - 1;
+			points[name][0] += item.score;
 		}
 	});
-	
 
-    return points;
 }
+
+function judge(outputFile){
+	let start = outputFile.indexOf('start---riscv64');
+	let end = outputFile.indexOf('end---riscv64', start);
+	if(end != -1 && start != -1){
+		let outputFile_riscv = outputFile.substring(start + 'start---riscv64'.length, end);
+		myjudge(outputFile_riscv);
+	}
+	start = outputFile.indexOf('start---x86_64');
+	end = outputFile.indexOf('end---x86_64', start);
+	if(end != -1 && start != -1){
+		let outputFile_x86 = outputFile.substring(start + 'start---x86_64'.length, end);
+		myjudge(outputFile_x86);
+	}
+	start = outputFile.indexOf('start---loongarch64');
+	end = outputFile.indexOf('end---loongarch64', start);
+	if(end != -1 && start != -1){
+		let outputFile_loongarch = outputFile.substring(start + 'start---loongarch64'.length, end);
+		myjudge(outputFile_loongarch);
+	}
+	start = outputFile.indexOf('start---aarch64');
+	end = outputFile.indexOf('end---aarch64', start);
+	if(end != -1 && start != -1){
+		let outputFile_aarch = outputFile.substring(start + 'start---aarch64'.length, end);
+		myjudge(outputFile_aarch);
+	}
+	// 遍历对象
+	for (let key in points) {
+		if (Object.hasOwnProperty.call(points, key)) {
+			// 检查第一个数是否是第二个数的四倍
+			points[key][0] = points[key][0]/4;
+		}
+	}
+	return points;
+} 
 
 module.exports.judge = judge;

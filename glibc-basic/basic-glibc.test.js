@@ -330,7 +330,7 @@ function evaluateTestYield(data) {
 }
 
 // Main judge function
-function judge(outputFile) {
+function myjudge(outputFile) {
     const pat = /========== START (.+) ==========/;
     let start = outputFile.indexOf('START basic-glibc');
     if(start == -1) return points;
@@ -354,7 +354,6 @@ function judge(outputFile) {
         .split('\n')
         .filter(line => line)
         .map(line => line.startsWith(',') ? line.substring(1) : line);
-        console.log(testOutput);
         switch (testName) {
             case 'test_brk': evaluateTestBrk(testOutput); break;
             case 'test_chdir': evaluateTestChdir(testOutput); break;
@@ -390,18 +389,57 @@ function judge(outputFile) {
             case 'test_yield': evaluateTestYield(testOutput); break;
             default: break;
         }
-        let testName1 = 'glibc ' + testName;
-        if(points[testName1][0] === points[testName1][1]) {
-            points[testName1][0] = 1;
-        }else{
-            points[testName1][0] = 0;
-        }
-        points[testName1][1] = 1;
+        // let testName1 = 'glibc ' + testName;
+        // if(points[testName1][0] === points[testName1][1]) {
+        //     points[testName1][0] = 1;
+        // }else{
+        //     points[testName1][0] = 0;
+        // }
+        // points[testName1][1] = 1;
         outputFile = outputFile.substring(end);
     }
-
-    return points;
 }
 
+function judge(outputFile){
+    let start = outputFile.indexOf('start---riscv64');
+    let end = outputFile.indexOf('end---riscv64', start);
+    if(end != -1 && start != -1){
+        let outputFile_riscv = outputFile.substring(start + 'start---riscv64'.length, end);
+        myjudge(outputFile_riscv);
+    }
+    start = outputFile.indexOf('start---x86_64');
+    end = outputFile.indexOf('end---x86_64', start);
+    if(end != -1 && start != -1){
+        let outputFile_x86 = outputFile.substring(start + 'start---x86_64'.length, end);
+        myjudge(outputFile_x86);
+    }
+    start = outputFile.indexOf('start---loongarch64');
+    end = outputFile.indexOf('end---loongarch64', start);
+    if(end != -1 && start != -1){
+        let outputFile_loongarch = outputFile.substring(start + 'start---loongarch64'.length, end);
+        myjudge(outputFile_loongarch);
+    }
+    start = outputFile.indexOf('start---aarch64');
+    end = outputFile.indexOf('end---aarch64', start);
+    if(end != -1 && start != -1){
+        let outputFile_aarch = outputFile.substring(start + 'start---aarch64'.length, end);
+        myjudge(outputFile_aarch);
+    }
+    // 遍历对象
+    for (let key in points) {
+        if (Object.hasOwnProperty.call(points, key)) {
+            let [first, second] = points[key];
+            // 检查第一个数是否是第二个数的四倍
+            if (first === second * 4) {
+                points[key][0] = 1;  
+                points[key][1] = 1;  
+            }else{
+                points[key][0] = 0;  
+                points[key][1] = 1;
+            }
+        }
+    }
+    return points;
+} 
 
 module.exports.judge = judge;
