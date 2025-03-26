@@ -223,7 +223,7 @@ let points = {
     'musl entry-dynamic.exe wcsstr_false_negative': [0 ,1],
 }
 
-function judge(outputFile) {
+function myjudge(outputFile) {
     let current = '';
     let currentStatus = false;
     let start = outputFile.indexOf('START libctest-musl');

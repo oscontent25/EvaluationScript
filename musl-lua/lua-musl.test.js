@@ -10,7 +10,7 @@ let points = {
     'musl lua strings.lua': [0, 1],
 }
 
-function judge(outputFile) {
+function myjudge(outputFile) {
     // outputFile.trim().split('\n').forEach((value, index) => {
     //     if(value.indexOf("testcase lua")==0 && value.endsWith("success")) {
     //         let name = value.replace('testcase', '').replace('success', '').trim();
