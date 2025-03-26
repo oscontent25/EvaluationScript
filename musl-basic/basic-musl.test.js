@@ -349,12 +349,12 @@ function judge(outputFile) {
             continue;
         }
         let testOutputstr = outputFile.substring(start + startMatch[0].length, end).replace(/\r/g, '');
-        console.log(testOutputstr);
+    
         const testOutput = testOutputstr
         .split('\n')
         .filter(line => line)
         .map(line => line.startsWith(',') ? line.substring(1) : line);
-        console.log(testOutput);
+
         switch (testName) {
             case 'test_brk': evaluateTestBrk(testOutput); break;
             case 'test_chdir': evaluateTestChdir(testOutput); break;

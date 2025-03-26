@@ -350,7 +350,6 @@ function judge(outputFile) {
             continue;
         }
         let testOutputstr = outputFile.substring(start + startMatch[0].length, end).replace(/\r/g, '');
-        console.log(testOutputstr);
         const testOutput = testOutputstr
         .split('\n')
         .filter(line => line)
