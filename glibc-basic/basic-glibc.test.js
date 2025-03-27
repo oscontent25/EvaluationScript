@@ -406,24 +406,31 @@ function judge(outputFile){
     let start = outputFile.indexOf('start---riscv64');
     let end = outputFile.indexOf('end---riscv64', start);
     if(end != -1 && start != -1){
+        console.log('start---riscv64');
         let outputFile_riscv = outputFile.substring(start + 'start---riscv64'.length, end);
         myjudge(outputFile_riscv);
     }
     start = outputFile.indexOf('start---x86_64');
     end = outputFile.indexOf('end---x86_64', start);
     if(end != -1 && start != -1){
+        console.log('start---riscv64');
+        
         let outputFile_x86 = outputFile.substring(start + 'start---x86_64'.length, end);
         myjudge(outputFile_x86);
     }
     start = outputFile.indexOf('start---loongarch64');
     end = outputFile.indexOf('end---loongarch64', start);
     if(end != -1 && start != -1){
+        console.log('start---riscv64');
+        
         let outputFile_loongarch = outputFile.substring(start + 'start---loongarch64'.length, end);
         myjudge(outputFile_loongarch);
     }
     start = outputFile.indexOf('start---aarch64');
     end = outputFile.indexOf('end---aarch64', start);
     if(end != -1 && start != -1){
+        console.log('start---riscv64');
+        
         let outputFile_aarch = outputFile.substring(start + 'start---aarch64'.length, end);
         myjudge(outputFile_aarch);
     }
