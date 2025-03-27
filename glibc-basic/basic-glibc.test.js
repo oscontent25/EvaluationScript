@@ -338,6 +338,7 @@ function myjudge(outputFile) {
     if(end == -1) return points;
     outputFile = outputFile.substring(start + 'START basic-glibc'.length, end);
     while (true) {
+        
         const startMatch = outputFile.match(pat);
         if (!startMatch) break;
         const testName = startMatch[1];
@@ -346,6 +347,7 @@ function myjudge(outputFile) {
         if(testName === 'test_execve') {
             end = outputFile.indexOf(`========== END main`, start);
         }
+        console.log(testName);
         if (end === -1) {
             continue;
         }
