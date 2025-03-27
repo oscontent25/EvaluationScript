@@ -349,6 +349,7 @@ function myjudge(outputFile) {
         }
         console.log(testName);
         if (end === -1) {
+            outputFile = outputFile.substring(start+startMatch[0].length);
             continue;
         }
         let testOutputstr = outputFile.substring(start + startMatch[0].length, end).replace(/\r/g, '');
