@@ -35,7 +35,7 @@ function myjudge(outputFile) {
         let indexNextCase = outputFile.indexOf('testcase lua', indexTestcase + 1);
         
         let judgeLine;
-        if(indexNextCase == -1 || indexNextCase > end) {
+        if(indexNextCase == -1) {
             judgeLine = outputFile.substring(indexTestcase);
         } else {
             judgeLine = outputFile.substring(indexTestcase, indexNextCase);
