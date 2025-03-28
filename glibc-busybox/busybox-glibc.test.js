@@ -57,14 +57,14 @@ let points = {
 }
 
 function myjudge(outputFile) {
+    let start = outputFile.indexOf('START busybox-glibc');
+    if(start == -1) break;
+    let end = outputFile.indexOf('END busybox-glibc', start);
+    if(end == -1) break;
+    outputFile = outputFile.substring(start + 'START basic-glibc'.length, end);
     while(true) {
-        let start = outputFile.indexOf('START busybox-glibc');
-        if(start == -1) break;
-        let end = outputFile.indexOf('END busybox-glibc', start);
-        if(end == -1) break;
-        let indexTestcase = outputFile.indexOf('testcase busybox', start);
-        if(indexTestcase == -1 || indexTestcase > end) break;
-
+        let indexTestcase = outputFile.indexOf('testcase busybox');
+        if(indexTestcase == -1) break;
         // 搜索下一个节点 如果没有下一个 则在最后推出循环
         let indexNextCase = outputFile.indexOf('testcase busybox', indexTestcase + 1);
         let judgeLine;
