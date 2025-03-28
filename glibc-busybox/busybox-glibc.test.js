@@ -35,7 +35,7 @@ let points = {
     'glibc busybox hexdump -C test.txt': [0, 1],
     'glibc busybox md5sum test.txt': [0, 1],
     'glibc busybox echo "ccccccc" >> test.txt': [0, 1],
-    'glibc busybox echo "bbbbbbb" >> test.txt': [0, 2],
+    'glibc busybox echo "bbbbbbb" >> test.txt': [0, 1],
     'glibc busybox echo "aaaaaaa" >> test.txt': [0, 1],
     'glibc busybox echo "2222222" >> test.txt': [0, 1],
     'glibc busybox echo "1111111" >> test.txt': [0, 1],
