@@ -456,6 +456,9 @@ function myjudge(outputFile) {
 			}
 			let name = 'musl ' + item.name;
 			points[name][0] += item.score;
+		}else{
+			let name = 'musl ' + item.name;
+			points[name][1] = -1;
 		}
 	});
 
@@ -490,7 +493,14 @@ function judge(outputFile){
 	for (let key in points) {
 		if (Object.hasOwnProperty.call(points, key)) {
 			// 检查第一个数是否是第二个数的四倍
-			points[key][0] = points[key][0]/4;
+			if (points[key][1] !== -1){
+				points[key][0] = points[key][0]/4;
+				points[key][1] = 1;
+			}else{
+				points[key][0] = 0;
+				points[key][1] = 1;
+			}
+
 		}
 	}
 	return points;

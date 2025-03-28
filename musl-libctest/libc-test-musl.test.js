@@ -261,7 +261,11 @@ function myjudge(outputFile) {
                 currentStatus = false;
             }
             current = 'musl ' + current;
-            if (currentStatus) points[current][0] += 1;
+            if (currentStatus) {
+                points[current][0] += 1;
+            }else{
+                points[current][1] = -1;
+            }
         } else {
             if(value == 'Pass!') {
                 currentStatus = true;
