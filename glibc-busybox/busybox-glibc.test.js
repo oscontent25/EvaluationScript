@@ -61,7 +61,7 @@ function myjudge(outputFile) {
     if(start == -1) break;
     let end = outputFile.indexOf('END busybox-glibc', start);
     if(end == -1) break;
-    outputFile = outputFile.substring(start + 'START basic-glibc'.length, end);
+    outputFile = outputFile.substring(start + 'START busybox-glibc'.length, end);
     while(true) {
         let indexTestcase = outputFile.indexOf('testcase busybox');
         if(indexTestcase == -1) break;
