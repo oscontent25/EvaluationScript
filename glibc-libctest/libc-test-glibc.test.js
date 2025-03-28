@@ -223,13 +223,31 @@ let points = {
     'glibc entry-dynamic.exe wcsstr_false_negative': [0 ,1],
 }
 
+// const { assert } = require('console');
+// const fs = require('fs');  // 引入 fs 模块
+
+// // 读取命令行传入的文件路径（在命令行中传入文件路径）
+// const filePath = process.argv[2];  // 通过 process.argv 获取传入的文件路径
+
+// // 读取文件内容
+// fs.readFile(filePath, 'utf8', (err, data) => {
+//     if (err) {
+//         console.error("读取文件时发生错误:", err);
+//         return;
+//     }
+
+//     // 将文件内容传递给 judge 函数
+//     let result = myjudge(data);
+//     console.log("Judge function result:", result);  // 输出 judge 函数的返回值
+// });
+
 function myjudge(outputFile) {
     let current = '';
     let currentStatus = false;
     let start = outputFile.indexOf('START libctest-glibc');
-    if(start == -1) return points;
+    if(start == -1) return;
     let end = outputFile.indexOf('END libctest-glibc', start);
-    if(end == -1) return points;
+    if(end == -1) return;
     outputFile = outputFile.substring(start + 'START libctest-glibc'.length, end);
     outputFile = outputFile.replaceAll('\r\n', '\n').replaceAll('\r', '\n');
     outputFile.trim().split('\n').forEach((value, index) => {

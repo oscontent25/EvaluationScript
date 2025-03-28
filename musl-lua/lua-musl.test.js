@@ -10,6 +10,24 @@ let points = {
     'musl lua strings.lua': [0, 1],
 }
 
+// const { assert } = require('console');
+// const fs = require('fs');  // 引入 fs 模块
+
+// // 读取命令行传入的文件路径（在命令行中传入文件路径）
+// const filePath = process.argv[2];  // 通过 process.argv 获取传入的文件路径
+
+// // 读取文件内容
+// fs.readFile(filePath, 'utf8', (err, data) => {
+//     if (err) {
+//         console.error("读取文件时发生错误:", err);
+//         return;
+//     }
+
+//     // 将文件内容传递给 judge 函数
+//     let result = myjudge(data);
+//     console.log("Judge function result:", result);  // 输出 judge 函数的返回值
+// });
+
 function myjudge(outputFile) {
     // outputFile.trim().split('\n').forEach((value, index) => {
     //     if(value.indexOf("testcase lua")==0 && value.endsWith("success")) {
@@ -23,13 +41,13 @@ function myjudge(outputFile) {
     // console.log(outputFile);
     // return points;
     let start = outputFile.indexOf('START lua-musl');
-    if(start == -1) break;
+    if(start == -1) return;
     let end = outputFile.indexOf('END lua-musl', start);
-    if(end == -1) break;
+    if(end == -1) return;
     outputFile = outputFile.substring(start + 'START lua-musl'.length, end);
     while(true) {
-        let indexTestcase = outputFile.indexOf('testcase lua', start);
-        if(indexTestcase == -1) break;
+        let indexTestcase = outputFile.indexOf('testcase lua');
+        if(indexTestcase == -1 ) break;
 
         // 搜索下一个节点 如果没有下一个 则在最后推出循环
         let indexNextCase = outputFile.indexOf('testcase lua', indexTestcase + 1);

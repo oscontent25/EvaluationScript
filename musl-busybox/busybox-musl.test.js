@@ -35,12 +35,11 @@ let points = {
     'musl busybox hexdump -C test.txt': [0, 1],
     'musl busybox md5sum test.txt': [0, 1],
     'musl busybox echo "ccccccc" >> test.txt': [0, 1],
-    'musl busybox echo "bbbbbbb" >> test.txt': [0, 1],
+    'musl busybox echo "bbbbbbb" >> test.txt': [0, 2],
     'musl busybox echo "aaaaaaa" >> test.txt': [0, 1],
     'musl busybox echo "2222222" >> test.txt': [0, 1],
     'musl busybox echo "1111111" >> test.txt': [0, 1],
-    'musl busybox echo "bbbbbbb" >> test.txt': [0, 1],
-    'musl busybox sort test.txt | busybox uniq': [0, 1],
+    'musl busybox sort test.txt | ./busybox uniq': [0, 1],
     'musl busybox stat test.txt': [0, 1],
     'musl busybox strings test.txt': [0, 1],
     'musl busybox wc test.txt': [0, 1],
@@ -56,20 +55,39 @@ let points = {
     'musl busybox find -name "busybox_cmd.txt"': [0, 1],
 }
 
+// const { assert } = require('console');
+// const fs = require('fs');  // 引入 fs 模块
+
+// // 读取命令行传入的文件路径（在命令行中传入文件路径）
+// const filePath = process.argv[2];  // 通过 process.argv 获取传入的文件路径
+
+// // 读取文件内容
+// fs.readFile(filePath, 'utf8', (err, data) => {
+//     if (err) {
+//         console.error("读取文件时发生错误:", err);
+//         return;
+//     }
+
+//     // 将文件内容传递给 judge 函数
+//     let result = myjudge(data);
+//     console.log("Judge function result:", result);  // 输出 judge 函数的返回值
+// });
+
 function myjudge(outputFile) {
+   
     let start = outputFile.indexOf('START busybox-musl');
-    if(start == -1) break;
+    if(start == -1) return;
     let end = outputFile.indexOf('END busybox-musl', start);
-    if(end == -1) break;
+    if(end == -1) return;
+
     outputFile = outputFile.substring(start + 'START busybox-musl'.length, end);
     while(true) {
         let indexTestcase = outputFile.indexOf('testcase busybox');
-        if(indexTestcase == -1 ) break;
-
+        if(indexTestcase == -1) break;
         // 搜索下一个节点 如果没有下一个 则在最后推出循环
         let indexNextCase = outputFile.indexOf('testcase busybox', indexTestcase + 1);
         let judgeLine;
-        if(indexNextCase == -1 || indexNextCase > end) {
+        if(indexNextCase == -1) {
             judgeLine = outputFile.substring(indexTestcase);
         } else {
             judgeLine = outputFile.substring(indexTestcase, indexNextCase);
@@ -84,10 +102,9 @@ function myjudge(outputFile) {
             }
         }
 
-        if(indexNextCase == -1 || indexNextCase > end) break;
+        if(indexNextCase == -1) break;
         outputFile = outputFile.substring(indexNextCase);
     }
-    
 }
 
 function judge(outputFile){

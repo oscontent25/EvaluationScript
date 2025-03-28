@@ -35,12 +35,11 @@ let points = {
     'glibc busybox hexdump -C test.txt': [0, 1],
     'glibc busybox md5sum test.txt': [0, 1],
     'glibc busybox echo "ccccccc" >> test.txt': [0, 1],
-    'glibc busybox echo "bbbbbbb" >> test.txt': [0, 1],
+    'glibc busybox echo "bbbbbbb" >> test.txt': [0, 2],
     'glibc busybox echo "aaaaaaa" >> test.txt': [0, 1],
     'glibc busybox echo "2222222" >> test.txt': [0, 1],
     'glibc busybox echo "1111111" >> test.txt': [0, 1],
-    'glibc busybox echo "bbbbbbb" >> test.txt': [0, 1],
-    'glibc busybox sort test.txt | busybox uniq': [0, 1],
+    'glibc busybox sort test.txt | ./busybox uniq': [0, 1],
     'glibc busybox stat test.txt': [0, 1],
     'glibc busybox strings test.txt': [0, 1],
     'glibc busybox wc test.txt': [0, 1],
@@ -70,7 +69,7 @@ let points = {
 //     }
 
 //     // 将文件内容传递给 judge 函数
-//     let result = judge(data);
+//     let result = myjudge(data);
 //     console.log("Judge function result:", result);  // 输出 judge 函数的返回值
 // });
 
@@ -88,7 +87,7 @@ function myjudge(outputFile) {
         // 搜索下一个节点 如果没有下一个 则在最后推出循环
         let indexNextCase = outputFile.indexOf('testcase busybox', indexTestcase + 1);
         let judgeLine;
-        if(indexNextCase == -1 || indexNextCase > end) {
+        if(indexNextCase == -1) {
             judgeLine = outputFile.substring(indexTestcase);
         } else {
             judgeLine = outputFile.substring(indexTestcase, indexNextCase);
@@ -103,7 +102,7 @@ function myjudge(outputFile) {
             }
         }
 
-        if(indexNextCase == -1 || indexNextCase > end) break;
+        if(indexNextCase == -1) break;
         outputFile = outputFile.substring(indexNextCase);
     }
 }
