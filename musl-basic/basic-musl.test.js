@@ -57,6 +57,9 @@ function assertUtil(testFn, data, args, expectedPass, testName, pointsKey) {
     if (result === expectedPass) {
         pointsKey = 'musl ' + pointsKey;
         points[pointsKey][0] += 1; // Increment pass count if assertion passes
+    }else{
+        pointsKey = 'musl ' + pointsKey;
+        points[pointsKey][1] = -1; // Mark test as failed
     }
 }
 
@@ -338,6 +341,7 @@ function myjudge(outputFile) {
     if(end == -1) return points;
     outputFile = outputFile.substring(start + 'START basic-musl'.length, end);
     while (true) {
+        
         const startMatch = outputFile.match(pat);
         if (!startMatch) break;
         const testName = startMatch[1];
@@ -346,6 +350,7 @@ function myjudge(outputFile) {
         if(testName === 'test_execve') {
             end = outputFile.indexOf(`========== END main`, start);
         }
+        console.log(testName);
         if (end === -1) {
             outputFile = outputFile.substring(start+startMatch[0].length);
             continue;
@@ -405,24 +410,31 @@ function judge(outputFile){
     let start = outputFile.indexOf('start---riscv64');
     let end = outputFile.indexOf('end---riscv64', start);
     if(end != -1 && start != -1){
+        console.log('start---riscv64');
         let outputFile_riscv = outputFile.substring(start + 'start---riscv64'.length, end);
         myjudge(outputFile_riscv);
     }
     start = outputFile.indexOf('start---x86_64');
     end = outputFile.indexOf('end---x86_64', start);
     if(end != -1 && start != -1){
+        console.log('start---x86_64');
+        
         let outputFile_x86 = outputFile.substring(start + 'start---x86_64'.length, end);
         myjudge(outputFile_x86);
     }
     start = outputFile.indexOf('start---loongarch64');
     end = outputFile.indexOf('end---loongarch64', start);
     if(end != -1 && start != -1){
+        console.log('start---loongarch64');
+        
         let outputFile_loongarch = outputFile.substring(start + 'start---loongarch64'.length, end);
         myjudge(outputFile_loongarch);
     }
     start = outputFile.indexOf('start---aarch64');
     end = outputFile.indexOf('end---aarch64', start);
     if(end != -1 && start != -1){
+        console.log('start---aarch64');
+        
         let outputFile_aarch = outputFile.substring(start + 'start---aarch64'.length, end);
         myjudge(outputFile_aarch);
     }

@@ -35,7 +35,7 @@ let points = {
     'musl busybox hexdump -C test.txt': [0, 1],
     'musl busybox md5sum test.txt': [0, 1],
     'musl busybox echo "ccccccc" >> test.txt': [0, 1],
-    'musl busybox echo "bbbbbbb" >> test.txt': [0, 2],
+    'musl busybox echo "bbbbbbb" >> test.txt': [0, 1],
     'musl busybox echo "aaaaaaa" >> test.txt': [0, 1],
     'musl busybox echo "2222222" >> test.txt': [0, 1],
     'musl busybox echo "1111111" >> test.txt': [0, 1],
@@ -99,6 +99,12 @@ function myjudge(outputFile) {
             name = 'musl ' + name;  // 在 name 前加上 'musl ' 以便区分
             if(points[name]) {
                 points[name][0] += 1;
+            }
+        }else{
+            let name = judgeLine.substring('testcase'.length, successIndex).trim();
+            name = 'musl ' + name;  // 在 name 前加上 'musl ' 以便区分
+            if(points[name]) {
+                points[name][1] = -1;
             }
         }
 

@@ -57,6 +57,9 @@ function assertUtil(testFn, data, args, expectedPass, testName, pointsKey) {
     if (result === expectedPass) {
         pointsKey = 'glibc ' + pointsKey;
         points[pointsKey][0] += 1; // Increment pass count if assertion passes
+    }else{
+        pointsKey = 'glibc ' + pointsKey;
+        points[pointsKey][1] = -1; // Mark test as failed
     }
 }
 

@@ -66,6 +66,12 @@ function myjudge(outputFile) {
             if(points[name]) {
                 points[name][0] += 1;
             }
+        }else{
+            let name = judgeLine.substring('testcase'.length, successIndex).trim();
+            name = 'glibc ' + name;  // 在 name 前加上 'glibc ' 以便区分
+            if(points[name]) {
+                points[name][1] = -1;
+            }
         }
 
         if(indexNextCase == -1) break;
