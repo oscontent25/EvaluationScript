@@ -22,21 +22,20 @@ function myjudge(outputFile) {
 
     // console.log(outputFile);
     // return points;
-
+    let start = outputFile.indexOf('START lua-musl');
+    if(start == -1) break;
+    let end = outputFile.indexOf('END lua-musl', start);
+    if(end == -1) break;
+    outputFile = outputFile.substring(start + 'START lua-musl'.length, end);
     while(true) {
-        let start = outputFile.indexOf('START lua-musl');
-        if(start == -1) break;
-        let end = outputFile.indexOf('END lua-musl', start);
-        if(end == -1) break;
-
         let indexTestcase = outputFile.indexOf('testcase lua', start);
-        if(indexTestcase == -1 || indexTestcase > end) break;
+        if(indexTestcase == -1) break;
 
         // 搜索下一个节点 如果没有下一个 则在最后推出循环
         let indexNextCase = outputFile.indexOf('testcase lua', indexTestcase + 1);
         
         let judgeLine;
-        if(indexNextCase == -1 || indexNextCase > end) {
+        if(indexNextCase == -1) {
             judgeLine = outputFile.substring(indexTestcase);
         } else {
             judgeLine = outputFile.substring(indexTestcase, indexNextCase);
@@ -51,7 +50,7 @@ function myjudge(outputFile) {
             }
         }
 
-        if(indexNextCase == -1 || indexNextCase > end) break;
+        if(indexNextCase == -1) break;
         outputFile = outputFile.substring(indexNextCase);
     }
 }
