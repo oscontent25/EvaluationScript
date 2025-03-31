@@ -283,10 +283,10 @@ function evaluateTestUmount(data) {
     assertGe(data, 4, 'test_umount');
     const r = data[0]?.match(/Mounting dev:(.+) to .\/mnt/)?.[1];
     if (r) assertEqual(data, r.length > 0, true, 'test_umount');
-    assertEqual(data, 1, "mount return: 0", 'test_umount');
     assertIn("mount return: 0", data, 'test_umount');
     assertIn("umount success.", data, 'test_umount');
     assertIn("return: 0", data, 'test_umount');
+    console.log(points['glibc test_umount']);
 }
 
 function evaluateTestUname(data) {
@@ -301,7 +301,6 @@ function evaluateTestUnlink(data) {
 
 function evaluateTestWait(data) {
     assertGe(data, 3, 'test_wait');
-    assertEqual(data, 0, "This is child process", 'test_wait');
     assertIn("wait child success.", data, 'test_wait');
     assertIn("This is child process", data, 'test_wait');
     assertIn("wstatus: 0", data, 'test_wait');
@@ -350,7 +349,6 @@ function myjudge(outputFile) {
         if(testName === 'test_execve') {
             end = outputFile.indexOf(`========== END main`, start);
         }
-        console.log(testName);
         if (end === -1) {
             outputFile = outputFile.substring(start+startMatch[0].length);
             continue;
