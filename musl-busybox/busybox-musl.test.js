@@ -143,7 +143,7 @@ function judge(outputFile){
         if (Object.hasOwnProperty.call(points, key)) {
             let [first, second] = points[key];
             // 检查第一个数是否是第二个数的四倍
-            if (first === second * 4) {
+            if (first >= second * 4) {
                 points[key][0] = 1;  
                 points[key][1] = 1;  
             }else{
