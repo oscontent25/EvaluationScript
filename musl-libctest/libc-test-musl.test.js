@@ -220,10 +220,8 @@ let points = {
     'musl entry-dynamic.exe wcsstr_false_negative': [0 ,1],
 }
 
-let passby = ["musl entry-static.exe fpclassify_invalid_ld80",
-    "musl entry-dynamic.exe fpclassify_invalid_ld80",
-    "musl entry-dynamic.exe dlopen",
-    "musl entry-dynamic.exe tls_get_new_dtv"]
+let passby = ['musl entry-static.exe fpclassify_invalid_ld80',
+    'musl entry-dynamic.exe fpclassify_invalid_ld80']
 
 // const { assert } = require('console');
 // const fs = require('fs');  // 引入 fs 模块
@@ -264,7 +262,7 @@ function myjudge(outputFile) {
             }
             current = 'musl ' + current;
             if (current in points) {
-            if (currentStatus || current in passby) {
+            if (currentStatus || passby.includes(current)) {
                 points[current][0] += 1;
             }else{
                 points[current][1] = -1;
