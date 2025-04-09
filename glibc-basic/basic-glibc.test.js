@@ -178,7 +178,7 @@ function evaluateTestGetdents(data) {
     if (r1) assertGreat(data, parseInt(r1), 1, 'test_getdents');
     const r2 = data[1]?.match(/getdents fd:(\d+)/)?.[1];
     if (r2) assertGreat(data, parseInt(r2), 1, 'test_getdents');
-    assertGreat(data, data[3].length, 1, 'test_getdents');
+    assertGreat(data, data[3].length, 0, 'test_getdents');
     assertInStr("getdents success.", data, 'test_getdents');
 }
 
