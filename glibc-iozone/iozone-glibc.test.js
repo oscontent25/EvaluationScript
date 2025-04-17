@@ -451,7 +451,7 @@ function myjudge(outputFile) {
 			} else {
 				item.score = item.result / item.baseline;
 			}	
-			if (item.score >= 1) {
+			if (item.score != 0) {
 				item.score = 1;
 			}
 			let name = 'glibc ' + item.name;
