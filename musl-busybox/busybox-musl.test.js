@@ -21,7 +21,7 @@ let points = {
     'musl busybox pwd': [0, 1],
     'musl busybox free': [0, 1],
     'musl busybox hwclock': [0, 1],
-    'musl busybox kill 10': [0, 1],
+    'musl busybox sh -c \'sleep 5\' & ./busybox kill $!': [0, 1],
     'musl busybox ls': [0, 1],
     'musl busybox sleep 1': [0, 1],
     'musl busybox echo "#### file opration test"': [0, 1],
